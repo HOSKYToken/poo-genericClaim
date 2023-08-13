@@ -1,4 +1,4 @@
-from helpers import merge_dicts, asset_name_encode_hex
+from helpers import merge_dicts
 from structures import Spend
 
 
@@ -56,7 +56,7 @@ class Unspent:
     def asset_plus_list(self):
         asset_list = []
         for asset_fqn, asset_amount in self.assets.items():
-            asset_list.append(f"{asset_amount} {asset_name_encode_hex(asset_fqn)}")
+            asset_list.append(f"{asset_amount} {asset_fqn}")
         return f'+"{"+".join(asset_list)}"' if len(asset_list) > 0 else ""
 
     def asset_string(self):

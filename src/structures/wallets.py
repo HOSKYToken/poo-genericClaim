@@ -16,6 +16,7 @@ class Wallets:
         return None
 
     def create_wallet(self, address):
+        from structures import Wallet
         self.attach_wallet(Wallet(address))
         return self.wallets[address]
 

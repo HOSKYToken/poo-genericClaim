@@ -1,0 +1,8 @@
+The following libraries are required by poo for python3.10
+
+python3.10 -m pip install atomicwrites
+python3.10 -m pip install sqlalchemy
+python3.10 -m pip install Flask-SQLAlchemy
+python3.10 -m pip install Flask-Cors
+python3.10 -m pip install flask_httpauth
+python3.10 -m pip install qrcode[pil]

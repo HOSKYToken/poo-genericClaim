@@ -69,7 +69,7 @@ class TransactionManager:
         self.log_spend_state()
 
     def verify_availability(self):
-        log.info("TransactionManager - Verfifying availability")
+        log.info("TransactionManager - Verifying availability")
 
         spendable_assets = self.spendable.available_assets
         spending_assets = self.spending.all_assets

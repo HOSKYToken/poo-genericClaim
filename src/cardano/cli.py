@@ -104,18 +104,15 @@ class CLI:
     def does_utxo_exist(self, tx_id):
         cmd = f"query utxo --tx-in {tx_id} {self.network}"
         result = self.execute(cmd).stdout
-        print(f"does_utxo_exist {tx_id} : {result}")
+
         if len(result.split("\n")[2:]) == 0:
-            print("does_utxo_exist False")
             return False
-        print("does_utxo_exist True")
+
         return True
 
     def have_utxos_been_spent(self, tx_ids):
         for tx_id in tx_ids:
-            print(tx_id)
             if self.does_utxo_exist(tx_id):
-                print("yes")
                 return False
         return True
 
