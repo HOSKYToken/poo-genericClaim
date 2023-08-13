@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sample Page</title>
+	<!-- Add necessary CSS and JavaScript libraries -->
+	<!-- For example: Bootstrap, jQuery, DataTables, Moment.js, Popper.js, Tempus Dominus -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.39.2/build/css/tempusdominus-bootstrap-4.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/fountains.css">
+	<style>
+		#sampleExpected {
+			resize: vertical; /* Allow vertical resizing */
+			overflow-y: auto; /* Enable vertical scrolling if the content exceeds the height */
+			resize: none;
+		}
+
+		#sampleExpected.json-sample {
+			height: 260px; /* Set an initial height for the sample box */
+		}
+
+		#sampleExpected.csv-sample {
+			height: 65px; /* Set an initial height for the sample box */
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Sample Page</h1>
+		<button id="loadCodesBtn" class="btn btn-primary">Load Codes</button>
+	</div>
+	<!-- Pop-up dialog -->
+	<div id="uploadDialog" class="modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Upload Codes</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- Add file type selection and separator customization fields here -->
+					<div class="form-group">
+						<label for="fileType">File Type:</label>
+						<select id="fileType" class="form-control">
+							<option value="csv">CSV</option>
+							<option value="json">JSON</option>
+						</select>
+					</div>
+					<!-- Sample Expected field -->
+					<div class="form-group">
+						<label for="sampleExpected">Sample Expected:</label>
+						<textarea id="sampleExpected" class="form-control" readonly></textarea>
+					</div>
+					<!-- Separator customization fields -->
+					<div id="csvSeparatorFields">
+						<div class="form-group">
+							<label for="separator">Code and Asset Separator:</label>
+							<input id="separator" class="form-control" type="text" placeholder="Separator" value=","/>
+						</div>
+						<div class="form-group">
+							<label for="assetSeparator">Asset Separator:</label>
+							<input id="assetSeparator" class="form-control" type="text" placeholder="Asset Separator" value=";"/>
+						</div>
+						<div class="form-group">
+							<label for="assetToValueSeparator">Asset to Value Separator:</label>
+							<input id="assetToValueSeparator" class="form-control" type="text" placeholder="Asset to Value Separator" value=":"/>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="uploadBtn" type="button" class="btn btn-primary">Upload</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.39.2/build/js/tempusdominus-bootstrap-4.min.js"></script>    
+	<script>
+		$(document).ready(function() {
+			$("#loadCodesBtn").click(function() {
+				$("#uploadDialog").modal("show");
+			});
+			$("#fileType, #separator, #assetSeparator, #assetToValueSeparator").change(function() {
+				updateSampleExpected();
+			});
+			function updateSampleExpected() {
+				var fileType = $("#fileType").val();
+				var separator = $("#separator").val();
+				var assetSeparator = $("#assetSeparator").val();
+				var assetToValueSeparator = $("#assetToValueSeparator").val();
+
+				// Update the sampleExpected field based on the file type
+				if (fileType === "csv") {
+					$("#csvSeparatorFields").show();
+					$("#sampleExpected").removeClass("json-sample").addClass("csv-sample"); // Add class for CSV
+					var sampleData = "code1" + separator + "lovelaces" + assetToValueSeparator + "1500000" + assetSeparator + "hosky" + assetToValueSeparator + "5000\n";
+					sampleData += "code2" + separator + "lovelaces" + assetToValueSeparator + "2000000" + assetSeparator + "hosky" + assetToValueSeparator + "10";
+				} else if (fileType === "json") {
+					$("#csvSeparatorFields").hide();
+					$("#sampleExpected").removeClass("csv-sample").addClass("json-sample"); // Add class for CSV
+					var sampleData = {
+						"code1": {
+							"lovelaces": "1500000",
+							"hosky": "5000"
+						},
+						"code2": {
+							"lovelaces": "2000000",
+							"hosky": "10"
+						}
+					};
+					sampleData = JSON.stringify(sampleData, null, 2);
+				}
+				$("#sampleExpected").val(sampleData);
+			}
+
+			$("#uploadBtn").click(function() {
+				var fileType = $("#fileType").val();
+				var separator = $("#separator").val();
+				var assetSeparator = $("#assetSeparator").val(); // Get the asset separator value
+				var assetToValueSeparator = $("#assetToValueSeparator").val(); // Get the asset to value separator value
+				var fileInput = document.createElement("input");
+				fileInput.type = "file";
+				if (fileType === "csv") {
+					fileInput.accept = ".csv";
+				} else if (fileType === "json") {
+					fileInput.accept = ".json";
+				}
+				fileInput.onchange = function(event) {
+					var file = event.target.files[0];
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						var contents = e.target.result;
+						if (fileType === "csv") {
+							parseCSV(contents, separator, assetSeparator, assetToValueSeparator); // Pass the additional separators
+						} else if (fileType === "json") {
+							parseJSON(contents);
+						}
+					};
+					reader.readAsText(file);
+				};
+				fileInput.click();
+			});
+
+			function parseCSV(contents, separator, assetSeparator, assetToValueSeparator) {
+				var lines = contents.split("\n");
+				var data = [];
+				var errors = [];
+				var successCount = 0;
+				for (var i = 0; i < lines.length; i++) {
+					var line = lines[i].trim();
+					if (line === "") continue; // Skip empty lines
+					var parts = line.split(separator);
+					if (parts.length !== 2) {
+						errors.push("Invalid line format at line " + (i + 1));
+						continue;
+					}
+					var code = parts[0].trim();
+					var assets = parts[1].trim();
+					// Validate code and assets
+					if (code === "" || assets === "") {
+						errors.push("Missing code or assets at line " + (i + 1));
+						continue;
+					}
+					// Parse assets
+					var assetPairs = assets.split(assetSeparator);
+					var assetData = {};
+					for (var j = 0; j < assetPairs.length; j++) {
+						var assetPair = assetPairs[j].trim().split(assetToValueSeparator);
+						if (assetPair.length !== 2) {
+							errors.push("Invalid asset format at line " + (i + 1));
+							break;
+						}
+						var assetName = assetPair[0].trim();
+						var assetQuantity = parseInt(assetPair[1].trim());
+						if (isNaN(assetQuantity)) {
+							errors.push("Invalid asset quantity at line " + (i + 1));
+							break;
+						}
+						assetData[assetName] = assetQuantity;
+					}
+					// Add code and assets to data array
+					data.push({
+						code: code,
+						assets: assetData
+					});
+					successCount++;
+				}
+				// Display summary
+				if (successCount > 0) {
+					console.log("Parsed successfully: " + successCount + " codes");
+					console.log(data);
+				}
+				// Display errors
+				if (errors.length > 0) {
+					console.log("Errors occurred while parsing the CSV file:");
+					console.log(errors);
+				}
+			}
+
+			// Populate Sample Expected field on page load
+			updateSampleExpected();
+		});
+
+		function parseJSON(contents) {
+			var data = [];
+			var errors = [];
+			try {
+				var jsonData = JSON.parse(contents);
+				for (var code in jsonData) {
+					var assets = jsonData[code];
+					var assetData = {};
+					for (var assetName in assets) {
+						var assetQuantity = parseInt(assets[assetName]);
+						if (isNaN(assetQuantity)) {
+							errors.push("Invalid asset quantity for code '" + code + "': " + assetName);
+							break;
+						}
+						assetData[assetName] = assetQuantity;
+					}
+					if (Object.keys(assetData).length === 0) {
+						errors.push("No valid assets found for code: " + code);
+						continue;
+					}
+					data.push({
+						code: code,
+						assets: assetData
+					});
+				}
+				// Display parsed data
+				console.log(data);
+				// Display errors
+				if (errors.length > 0) {
+					console.log("Errors occurred while parsing the JSON file:");
+					console.log(errors);
+				}
+			} catch (error) {
+				console.log("Error parsing JSON file:", error);
+			}
+		}
+	</script>
+</body>
+</html>

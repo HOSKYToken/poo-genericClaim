@@ -1,0 +1,33 @@
+#claimCodesTable_wrapper {
+	padding-top: 15px;
+}
+
+.cardano-scan-logo {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background-image: url('/images/CardanoScanLogo.png');
+	background-size: cover;
+	text-indent: -9999px;
+}
+
+.popover-qr {
+    max-width: 300px;
+}
+
+.qr-icon-small {
+	height: 20px;
+	width: 20px;
+}
+
+#qrCodeImage {
+  width: 100%;
+  height: 100%;
+}
+
+#qr-address-value {
+	width: 100%;
+	text-align: center;
+	font-size: 13px;
+}
+

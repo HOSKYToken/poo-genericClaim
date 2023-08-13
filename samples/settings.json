@@ -1,0 +1,39 @@
+{
+	"log_level": "debug",
+	"root_path": "<YOUR_PATH>",
+	"cardano_cli": {
+		"path": "<YOUR_PATH>/cardano-cli",
+		"socket": "<YOUR_PATH>/db/socket",
+		"network": "mainnet",
+		"era": "babbage",
+		"debug": false
+	},
+	"clients": {
+		"Admin": {
+			"domain": "localhost",
+			"port": 9999,
+			"static": "{root_path}/static",
+			"active": true
+		},
+		"Claims": {
+			"domain": "localhost",
+			"port": 6969,
+			"active": true
+		}
+	},
+	"database": "{root_path}/poo.db",
+	"wallets": "{root_path}/wallets",
+	"certs": {
+		"certificate": "{root_path}/certs/certificate.pem",
+		"key": "{root_path}/certs/key.pem"
+	},
+	"file_checkpoint": "{root_path}/checkpoint.json",
+	"max_batch_send": 10,
+	"security": {
+		"fountain": {
+			"*": {
+				"*": "*"
+			}
+		}
+	}
+}

@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#menu {
+    background-color: lightgrey;
+    color: #fff;
+    padding: 10px;
+}
+
+#menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu li {
+	margin: auto;
+}
+
+#menu ul li {
+    display: inline;
+    margin-right: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#menu ul li a {
+    color: #fff;
+}
+
+#menu ul li a:hover {
+    color: lightblue;
+}
+

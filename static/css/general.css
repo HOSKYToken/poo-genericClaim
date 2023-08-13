@@ -1,0 +1,17 @@
+body {
+  padding-top: 20px;
+}
+
+.copyBtn {
+    background-color: transparent;
+    border: none;
+}
+
+.copyBtn .fa {
+    color: #007bff;
+}
+
+.container {
+	max-width: 100%;
+}
+

@@ -1,0 +1,88 @@
+body {
+  padding-top: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+td {
+  vertical-align: middle;
+}
+
+td button {
+  margin-right: 5px;
+}
+
+/* timepicker-fix.css */
+
+.bootstrap-timepicker-widget.dropdown-menu {
+  z-index: 1050; /* This value should be higher than the z-index of the modal (1040) */
+}
+
+#fountainTable tbody tr:hover {
+    background-color: #B2EBF2;
+    cursor: pointer;
+}
+
+#fountainTableConfiguration_wrapper {
+	padding-top: 15px;
+}
+
+#fountainTableClaimed_wrapper {
+	display: none;
+	padding-top: 15px;
+}
+
+#fountainTableConfiguration th#maxAddressClaims,
+#fountainTableClaimed th#maxAddressClaims {
+    text-align: center;
+}
+
+#fountainTableConfiguration td#maxAddressClaims,
+#fountainTableClaimed td#maxAddressClaims {
+    text-align: center;
+}
+
+.selected-row {
+    background-color: #8BC34A !important;
+    color: white;
+}
+
+.create-fountain-container {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+  width: auto;
+}
+
+#sampleExpected {
+	resize: vertical; /* Allow vertical resizing */
+	overflow-y: auto; /* Enable vertical scrolling if the content exceeds the height */
+	resize: none;
+}
+
+#sampleExpected.json-sample {
+	height: 260px; /* Set an initial height for the sample box */
+}
+
+#sampleExpected.csv-sample {
+	height: 65px; /* Set an initial height for the sample box */
+}
+
+#validationFailureDialog {
+	top: calc(50% + 100px);
+	left: calc(50% + 100px);
+	transform: translate(-50%, -50%);
+}
+
+#validationSuccessDialog {
+	top: calc(50% + 100px);
+	left: calc(50% + 100px);
+	transform: translate(-50%, -50%);
+}
+
+.modal-disabled {
+    pointer-events: none; /* Disable pointer events */
+    opacity: 0.75; /* Set opacity to visually indicate the modal is disabled */
+}

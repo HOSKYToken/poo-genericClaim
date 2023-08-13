@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fountain Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.39.2/build/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/fountains.css">
+	<script src="js/menu.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Fountain Management</h1>
+        <button id="toggleViewBtn" class="btn btn-primary">Table View Claimed</button>
+        <button id="createFountainBtn" class="btn btn-primary" data-toggle="modal" data-target="#fountainModal">Create Fountain</button>
+        <table id="fountainTableConfiguration" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th name">Name</th>
+                    <th status">Status</th>
+                    <th id="start">Start Date & Time</th>
+                    <th id="end">End Date & Time</th>
+                    <th id="wallet">Wallet</th>
+                    <th id="maxAddressClaims">Max Address Claims</th>
+                    <th id="actions">Actions</th>
+                </tr>
+            </thead>
+        </table>
+        <table id="fountainTableClaimed" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th name">Name</th>
+                    <th id="totalClaimCodes">Total Claim Codes</th>
+                    <th id="totalClaimed">Claim Codes Claimed</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- Fountain Modal -->
+    <div class="modal fade" id="fountainModal" tabindex="-1" role="dialog" aria-labelledby="fountainModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fountainModalLabel">Fountain</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="fountainForm">
+                        <input type="hidden" id="fountainId">
+                        <div class="form-group">
+                            <label for="fountainName">Name</label>
+                            <input type="text" class="form-control" id="fountainName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDateTime">Start Date & Time</label>
+                            <div class="input-group date" id="startDateTime" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#startDateTime" required>
+                                <div class="input-group-append" data-target="#startDateTime" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDateTime">End Date & Time</label>
+                            <div class="input-group date" id="endDateTime" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#endDateTime" required>
+                                <div class="input-group-append" data-target="#endDateTime" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+						<div class="form-group">
+							<label for="fountainWallet">Wallet</label>
+							<select class="form-control" id="fountainWallet" required></select>
+						</div>
+						<div class="form-group">
+							<label for="maxAddressClaims">Maximum Address Claims</label>
+                            <input type="text" class="form-control" id="fountainMaxAddressClaims" required>
+						</div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" form="fountainForm">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+	<!-- Pop-up dialog -->
+	<div id="uploadDialog" class="modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Upload Codes</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- Add file type selection and separator customization fields here -->
+					<div class="form-group">
+						<label for="fileType">File Type:</label>
+						<select id="fileType" class="form-control">
+							<option value="csv">CSV</option>
+							<option value="json">JSON</option>
+						</select>
+					</div>
+					<!-- Sample Expected field -->
+					<div class="form-group">
+						<label for="sampleExpected">Sample Expected:</label>
+						<textarea id="sampleExpected" class="form-control" readonly></textarea>
+					</div>
+					<!-- Separator customization fields -->
+					<div id="csvSeparatorFields">
+						<div class="form-group">
+							<label for="separator">Code and Asset Separator:</label>
+							<input id="separator" class="form-control" type="text" placeholder="Separator" value=","/>
+						</div>
+						<div class="form-group">
+							<label for="assetSeparator">Asset Separator:</label>
+							<input id="assetSeparator" class="form-control" type="text" placeholder="Asset Separator" value=";"/>
+						</div>
+						<div class="form-group">
+							<label for="assetToValueSeparator">Asset to Value Separator:</label>
+							<input id="assetToValueSeparator" class="form-control" type="text" placeholder="Asset to Value Separator" value=":"/>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="uploadBtn" type="button" class="btn btn-primary">Upload</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="validationFailureDialog" class="modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Validation Failure</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="validationFailureMessage"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="validationSuccessDialog" class="modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Validation Success</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p id="validationSummary"></p>
+				</div>
+				<div class="modal-footer">
+					<button id="cancelBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button id="saveBtn" type="button" class="btn btn-primary">Save to Database</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.39.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="js/fountains.js"></script>
+</body>
+</html>
+
