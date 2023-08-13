@@ -2,4 +2,4 @@
 
 source env.sh
 
-python3 ../src/main.py --settings ../settings/settings.json
+python3 ../src/main.py --settings ../samples/settings.json

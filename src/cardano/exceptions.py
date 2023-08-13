@@ -1,6 +1,7 @@
 class ExceptionCardanoCLISettingsNotSupplied(Exception):
     pass
 
+
 class ExceptionAssetNotFound(Exception):
     pass
 

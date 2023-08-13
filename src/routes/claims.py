@@ -67,13 +67,6 @@ def verify_password(username, password):
     return False
 
 
-@auth.get_password
-def get_password(username):
-    if username == 'admin':
-        return 'secret'  # Replace with the actual password for the 'admin' user
-    return None  # Return None if the username doesn't exist
-
-
 @app_claims.route("/alive", methods=["OPTIONS", "GET"])
 def alive():
     return {"status": "ok"}, 200

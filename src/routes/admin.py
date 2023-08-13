@@ -7,7 +7,14 @@ from flask import Flask, request, send_from_directory, jsonify, send_file, Respo
 from flask_cors import CORS
 
 from daos import DAOFountain, DAOClaimCodes, DAORewards
-from helpers import file_exists, load_json, generate_qr_image, is_valid_qr_png, fetch_file_content
+from helpers import \
+    file_exists,\
+    load_json,\
+    generate_qr_image, \
+    is_valid_qr_png,\
+    fetch_file_content,\
+    to_ascii_named_assets
+
 from logger import log
 
 app_admin = Flask(__name__, )
@@ -161,7 +168,7 @@ def list_wallets():
 def get_wallet(wallet_name):
     wallet_path = f"{app_admin.wallet_path}{wallet_name}/balance.json"
     if file_exists(wallet_path):
-        balance = load_json(wallet_path)
+        balance = to_ascii_named_assets(load_json(wallet_path))
         file_dts = os.path.getmtime(wallet_path)
         dt = datetime.fromtimestamp(file_dts)
         balance["date"] = dt.strftime("%Y-%m-%d")

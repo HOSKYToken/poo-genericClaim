@@ -3,7 +3,7 @@ import time
 from threading import Thread, Event
 
 from daos import DAOSendingQueue, DAOClaimCodes
-from helpers import load_json, save_json, check_path, fix_end_of_path, file_exists
+from helpers import load_json, save_json, fix_end_of_path, file_exists
 from logger import log
 from structures import Spending
 from cardano import CLI
@@ -86,7 +86,7 @@ class TaskSender(Thread):
 
                         for reward in claim_code.rewards:
                             log.debug(f"{self.service_name} - {reward.fqn_asset()}: {reward.amount}")
-                            assets[reward.fqn_asset()] = reward.amount
+                            assets[reward.fqn_asset(hex_encoded=True)] = reward.amount
 
                         log.debug(f"{self.service_name} - Code {claim_code.code}")
                         log.debug(f"{self.service_name} - From Wallet: {claim_code.fountain.wallet}")
@@ -109,11 +109,15 @@ class TaskSender(Thread):
         if len(spent) > 0:
             result = self.cli.send(list(fountain_wallets), Spending(spent))
 
-            log.debug(f"{self.service_name} - Result {result}")
+            if result.uuid:
+                log.debug(f"{self.service_name} - Result {result}")
 
-            self.checkpoint["transaction_uuid"] = result.uuid
-            self.checkpoint["sent_tx_id"] = result.tx_id
-            self.checkpoint["spent_tx_ids"] = result.tx_ids
+                self.checkpoint["transaction_uuid"] = result.uuid
+                self.checkpoint["sent_tx_id"] = result.tx_id
+                self.checkpoint["spent_tx_ids"] = result.tx_ids
+            else:
+                log.error(f"{self.service_name} - Error, failed to send transaction!")
+                sys.exit(1)
 
         self.checkpoint["spent"] = spent
         self.checkpoint["test_claims"] = test_claims

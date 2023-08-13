@@ -72,7 +72,7 @@ class Wallet:
             assets = items[4:]
 
             while len(assets) > 2 and assets[0] == '+':
-                utxo.add_asset(asset_name_decode_hex(assets[2]), int(assets[1]))
+                utxo.add_asset(assets[2], int(assets[1]))
                 assets = assets[3:]
 
             self.add_utxo(utxo)
@@ -127,10 +127,15 @@ class Wallet:
     @property
     def formatted_assets(self):
         out = ["List of Assets:\n"]
+        out_hex = ["  Hex:\n"]
+        out_ascii = ["  Ascii:\n"]
         assets = self.available_assets
         for i, (asset_fqn, asset_amount) in enumerate(assets.items()):
             comma = ',' if i < len(assets) - 1 else ''
-            out.append(f"  '{asset_fqn}': {asset_amount:,}{comma}\n")
+            out_hex.append(f"    '{asset_fqn}': {asset_amount:,}{comma}\n")
+            out_ascii.append(f"    '{asset_name_decode_hex(asset_fqn)}': {asset_amount:,}{comma}\n")
+        out.extend(out_hex)
+        out.extend(out_ascii)
         return ''.join(out)
 
     @property
@@ -139,9 +144,14 @@ class Wallet:
         for tx_id in self.unspent_tx_ids:
             out.append(f"  {tx_id}:\n")
             assets = self.get_unspent_tx_assets(tx_id)
+            out_hex = ["  Hex:\n"]
+            out_ascii = ["  Ascii:\n"]
             for i, (asset_fqn, asset_amount) in enumerate(assets.items()):
                 comma = ',' if i < len(assets) - 1 else ''
-                out.append(f"    '{asset_fqn}': {asset_amount:,}{comma}\n")
+                out_hex.append(f"      '{asset_fqn}': {asset_amount:,}{comma}\n")
+                out_ascii.append(f"      '{asset_name_decode_hex(asset_fqn)}': {asset_amount:,}{comma}\n")
+            out.extend(out_hex)
+            out.extend(out_ascii)
         return "".join(out)
 
     @property
